@@ -25,4 +25,4 @@ class Solution {
 
         return (int) ((dp[zero][one][0] + dp[zero][one][1]) % MOD);
     }
-}
+}100
