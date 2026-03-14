@@ -1,0 +1,108 @@
+Piyush Kumar
+
+Bengaluru, Karnataka, 560066 | Phone: +91-7061615693 | Email: piyushkumarbarnwal@gmail.com
+
+LinkedIn: linkedin.com/in/piyushkumar123 | GitHub: github.com/PiyushKumar495
+SUMMARY
+
+.NET Full-Stack Developer at Capgemini delivering end-to-end solutions across ASP.NET Core Web APIs 
+
+and Angular frontends for enterprise workflow systems. Achieved 30% API performance improvement via 
+
+SQL query optimization. Azure Developer Associate (AZ-204) certified. Strong focus on clean architecture, 
+
+JWT-secured APIs, and cloud-native development on Microsoft Azure.
+
+TECHNICAL SKILLS
+
+ Languages: C#, JavaScript
+
+ Frameworks: ASP.NET Core Web API, ASP.NET MVC, Angular, EF Core
+
+ Databases: SQL Server, MySQL
+
+ Cloud: Microsoft Azure (App Services, Azure Functions, Blob Storage, Azure SQL), Azure AD
+
+ Tools / Testing: Git, GitHub, Postman, Swagger, Visual Studio, VS Code, xUnit, NUnit, Jasmine
+
+ Concepts: RESTful APIs, OOP, SOLID Principles, Dependency Injection, Clean Architecture,
+
+JWT Authentication, RBAC
+
+WORK EXPERIENCE
+
+Capgemini Jan 2025 – Present
+
+Software Developer(.NET Full Stack) Bengaluru, Karnataka
+
+ Designed and shipped 10+ RESTful APIs in ASP.NET Core using Repository pattern, for an internal 
+
+enterprise workflow management system, automating approval processes and reducing manual processing
+
+effort across teams.
+
+ Built secure, role-based access control with JWT authentication and automated email notifications for a multi
+
+ team application, improving data governance across departments.
+
+ Profiled and rewrote critical SQL queries using execution plan analysis, cutting average API response 
+
+ time by ~30% and improving application throughput under concurrent load.
+
+ Developed Angular components and integrated RESTful APIs for internal enterprise UI, enabling
+
+dynamic data rendering and improving usability across multiple teams.
+
+ Wrote unit and integration tests using xUnit for core API endpoints, reducing regression bugs during
+
+ sprint releases.
+
+PROJECTS
+
+E-Commerce Platform | Tech Stack: C#, ASP.NET Core Web API, Angular, EF Core, SQL Server 
+
+GitHub: github.com/PiyushKumar495/EShoppingWebsite-Project
+
+ Built a full-stack e-commerce platform handling product catalogue, cart, and order lifecycle on an 8-entity EF 
+
+Core schema with foreign key constraints ensuring transactional consistency across operations.
+
+ Integrated Angular frontend with RESTful APIs for dynamic product filtering, cart management and secure 
+
+checkout flow.
+
+ Deployed on Azure App Service with Azure SQL Database for cloud-based hosting.
+
+Cooking Recipe Portal | Tech Stack: C#, ASP.NET Core Web API, Angular, EF Core, SQL Server
+
+GitHub: github.com/PiyushKumar495/CookingRecipePortal
+
+ Built a multi-role recipe management platform where admins can moderate content and users can submit, 
+
+rate, and edit recipes. Implemented JWT-based authentication with role-based route guarding on both API 
+
+and Angular frontend.
+
+ Built interactive Angular Material UI with ratings, reviews, and inline editing, delivering a responsive
+
+experience across admin and user dashboards.
+
+CERTIFICATIONS
+
+ Microsoft Certified: Azure Developer Associate (AZ-204) Feb 2026
+
+ Microsoft Full-Stack Developer Professional Certificate Dec 2025
+
+ Microsoft Certified: Azure AI Fundamentals Nov 2025
+
+ACHIEVEMENTS
+
+ Contributed to open-source projects during Hacktoberfest by raising and merging pull requests.
+
+ Secured 4★ ratings in SQL on HackerRank and solved 200+ DSA problems on LeetCode
+
+EDUCATION
+
+Bachelor of Technology (B.Tech) in Computer Science May 2025
+
+Lovely Professional University, Phagwara, Punjab
