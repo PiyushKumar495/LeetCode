@@ -1,0 +1,28 @@
+class Solution {
+    public boolean findRotation(int[][] mat, int[][] target) {
+       for(int k = 0;k<4;k++){
+        if(Arrays.deepEquals(mat,target))
+        return true;
+        int n = mat.length;
+        for(int i = 0;i<n;i++){
+            for(int j=i+1;j<n;j++){
+                int temp = mat[i][j];
+                mat[i][j] = mat[j][i];
+                mat[j][i] = temp;
+            }
+        }
+        for(int[] log : mat){
+            int start = 0;
+            int end = n-1;
+            while(start<end){
+                int num = log[start];
+                log[start] = log[end];
+                log[end] = num;
+                start++;
+                end--;
+            }
+        }
+       } 
+       return false;
+    }
+}
