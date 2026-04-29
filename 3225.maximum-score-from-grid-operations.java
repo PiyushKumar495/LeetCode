@@ -1,55 +1,65 @@
 class Solution {
-    public long maximumScore(int[][] matrix) {
-        int size = matrix.length;
-        long[][] columnPrefixSum = new long[size + 1][size];
-        
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
-                columnPrefixSum[row + 1][col] = columnPrefixSum[row][col] + matrix[row][col];
+
+    Long dp[][][];
+
+    long solve(int grid[][], int col, int last1, int last2) {
+        int n = grid.length;
+
+        if (col >= n) {
+            return 0;
+        }
+
+        if (dp[col][last1][last2] != null) {
+            return dp[col][last1][last2];
+        }
+
+        long fromLast2 = 0;
+
+        for (int i = 0; i < last2; i++) {
+            fromLast2 = fromLast2 + grid[i][col];
+        }
+
+        // Case I
+
+        // don't take anything from this column, just take contribution of last2
+
+        long ans = fromLast2 + solve(grid, col + 1, 0, last1);
+
+        long sum = 0;
+
+        // Case II
+
+        if (col + 1 < n) {
+            // take from this column and block next column for taking it
+            // also note here we are passing last2 as 0 because last1 will overlapped and
+            // exceed with last2
+            for (int i = last1; i < n; i++) {
+                sum = sum + grid[i][col];
+                ans = Math.max(ans, sum + solve(grid, col + 1, i + 1, 0));
             }
         }
-        
-  
-        long[][][] dpTable = new long[size][size + 1][size + 1];
-        for (long[][] table2D : dpTable)
-            for (long[] table1D : table2D)
-                Arrays.fill(table1D, -1);
-        
-        for (int colored = 0; colored <= size; colored++)
-            dpTable[0][colored][0] = 0;
-        
-        for (int currentColumn = 0; currentColumn < size - 1; currentColumn++) {
-            for (int colored = 0; colored <= size; colored++) {
-                for (int taken = 0; taken <= size; taken++) {
-                    if (dpTable[currentColumn][colored][taken] == -1)
-                        continue;
-                    
-                    for (int newColumn = 0; newColumn <= size; newColumn++) {
-                        if (newColumn > colored) {
-                            long currentValue = dpTable[currentColumn][colored][taken];
-                            if (colored + taken < newColumn) {
-                                currentValue += columnPrefixSum[newColumn][currentColumn] - columnPrefixSum[colored + taken][currentColumn];
-                            }
-                            dpTable[currentColumn + 1][newColumn][0] = Math.max(dpTable[currentColumn + 1][newColumn][0], currentValue);
-                        } else if (newColumn < colored) {
-                            long currentValue = dpTable[currentColumn][colored][taken]
-                                + columnPrefixSum[colored][currentColumn + 1] - columnPrefixSum[newColumn][currentColumn + 1];
-                            
-                            dpTable[currentColumn + 1][newColumn][colored - newColumn] = Math.max(dpTable[currentColumn + 1][newColumn][colored - newColumn], currentValue);
-                        } else {
-                            long currentValue = dpTable[currentColumn][colored][taken];
-                            dpTable[currentColumn + 1][newColumn][0] = Math.max(currentValue, dpTable[currentColumn + 1][newColumn][0]);
-                        }
-                    }
-                }
+
+        // Case III
+
+        // here mark the current columns as block by manipulating next last2
+        // also take into consideration last2 which we got here
+        for (int i = 0; i < n; i++) {
+            if (i < last2) {
+                fromLast2 = fromLast2 - grid[i][col];
             }
+            ans = Math.max(ans, fromLast2 + solve(grid, col + 1, 0, i + 1));
         }
-        
-        long maxResult = 0;
-        for (int i = 0; i <= size; i++)
-            for (int j = 0; j <= size; j++)
-                maxResult = Math.max(maxResult, dpTable[size - 1][i][j]);
-        
-        return maxResult;
+
+        dp[col][last1][last2] = ans;
+
+        return ans;
+    }
+
+    public long maximumScore(int[][] grid) {
+        int n = grid.length;
+
+        dp = new Long[n + 1][n + 1][n + 1];
+
+        return solve(grid, 0, 0, 0);
     }
 }
