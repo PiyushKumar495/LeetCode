@@ -1,69 +1,110 @@
-class Solution {
-    private int[] roww = {0, 0, -1, 1};
-    private int[] coll = {-1, 1, 0, 0};
-    private void bfs(List<List<Integer>> grid, int[][] score, int n) {
-        Queue<int[]> q = new LinkedList<>();
+public class Solution {
+
+    public int maximumSafenessFactor(List<List<Integer>> grid) {
+        int[][] safeness = calculateSafenessFactors(grid);
+        int maxSafeness = findMaxSafeness(safeness);
+        return findMaxSafenessFactor(grid, safeness, maxSafeness);
+    }
+
+    // Method to calculate the safeness factor for each cell using multi-source BFS
+    private int[][] calculateSafenessFactors(List<List<Integer>> grid) {
+        int n = grid.size();
+        int[][] safeness = new int[n][n];
+        for (int[] row : safeness) Arrays.fill(row, Integer.MAX_VALUE);
+        Queue<int[]> queue = new LinkedList<>();
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (grid.get(i).get(j) == 1) {
-                    score[i][j] = 0;
-                    q.offer(new int[]{i, j});
+                    queue.add(new int[]{i, j});
+                    safeness[i][j] = 0;
                 }
             }
         }
 
-        while (!q.isEmpty()) {
-            int[] t = q.poll();
-            int x = t[0], y = t[1];
-            int s = score[x][y];
+        int[] dirX = {-1, 1, 0, 0};
+        int[] dirY = {0, 0, -1, 1};
+
+        while (!queue.isEmpty()) {
+            int[] cell = queue.poll();
+            int x = cell[0];
+            int y = cell[1];
 
             for (int i = 0; i < 4; i++) {
-                int newX = x + roww[i];
-                int newY = y + coll[i];
+                int newX = x + dirX[i];
+                int newY = y + dirY[i];
 
-                if (newX >= 0 && newX < n && newY >= 0 && newY < n && score[newX][newY] > 1 + s) {
-                    score[newX][newY] = 1 + s;
-                    q.offer(new int[]{newX, newY});
+                if (newX >= 0 && newX < n && newY >= 0 && newY < n && safeness[newX][newY] > safeness[x][y] + 1) {
+                    safeness[newX][newY] = safeness[x][y] + 1;
+                    queue.add(new int[]{newX, newY});
                 }
             }
         }
+
+        return safeness;
     }
 
-    public int maximumSafenessFactor(List<List<Integer>> grid) {
-        int n = grid.size();
-        if (grid.get(0).get(0) == 1 || grid.get(n - 1).get(n - 1) == 1) {
-            return 0;
+    // Method to find the maximum safeness value from the safeness matrix
+    private int findMaxSafeness(int[][] safeness) {
+        int maxSafeness = 0;
+        for (int[] row : safeness) {
+            for (int val : row) {
+                maxSafeness = Math.max(maxSafeness, val);
+            }
+        }
+        return maxSafeness;
+    }
+
+    // Method to perform binary search to find the maximum safeness factor
+    private int findMaxSafenessFactor(List<List<Integer>> grid, int[][] safeness, int maxSafeness) {
+        int left = 0;
+        int right = maxSafeness;
+        int result = 0;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (canAchieveSafeness(grid, safeness, mid)) {
+                result = mid;
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
         }
 
-        int[][] score = new int[n][n];
-        for (int[] row : score) Arrays.fill(row, Integer.MAX_VALUE);
-        bfs(grid, score, n);
+        return result;
+    }
 
-        boolean[][] vis = new boolean[n][n];
-        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> b[0] - a[0]);
-        pq.offer(new int[]{score[0][0], 0, 0});
+    // Method to check if a path with the given safeness factor exists using BFS
+    private boolean canAchieveSafeness(List<List<Integer>> grid, int[][] safeness, int threshold) {
+        int n = grid.size();
+        if (safeness[0][0] < threshold) return false;
 
-        while (!pq.isEmpty()) {
-            int[] temp = pq.poll();
-            int safe = temp[0];
-            int i = temp[1], j = temp[2];
+        Queue<int[]> queue = new LinkedList<>();
+        boolean[][] visited = new boolean[n][n];
+        queue.add(new int[]{0, 0});
+        visited[0][0] = true;
 
-            if (i == n - 1 && j == n - 1) return safe;
-            vis[i][j] = true;
+        int[] dirX = {-1, 1, 0, 0};
+        int[] dirY = {0, 0, -1, 1};
 
-            for (int k = 0; k < 4; k++) {
-                int newX = i + roww[k];
-                int newY = j + coll[k];
+        while (!queue.isEmpty()) {
+            int[] cell = queue.poll();
+            int x = cell[0];
+            int y = cell[1];
 
-                if (newX >= 0 && newX < n && newY >= 0 && newY < n && !vis[newX][newY]) {
-                    int s = Math.min(safe, score[newX][newY]);
-                    pq.offer(new int[]{s, newX, newY});
-                    vis[newX][newY] = true;
+            if (x == n - 1 && y == n - 1) return true;
+
+            for (int i = 0; i < 4; i++) {
+                int newX = x + dirX[i];
+                int newY = y + dirY[i];
+
+                if (newX >= 0 && newX < n && newY >= 0 && newY < n && !visited[newX][newY] && safeness[newX][newY] >= threshold) {
+                    queue.add(new int[]{newX, newY});
+                    visited[newX][newY] = true;
                 }
             }
         }
 
-        return -1;
+        return false;
     }
 }
