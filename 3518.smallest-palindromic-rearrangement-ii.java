@@ -1,52 +1,63 @@
-import java.math.BigInteger;
 class Solution {
-    public String smallestPalindrome(String s, int k) {
-        int n = s.length();
-        if (n == 1) 
-            return k == 1 ? s : "";
-        
-        int half = n/2;
-        int[] freq = new int[26];
-        for (int i = 0; i < half; i++) {
-            freq[s.charAt(i) - 'a']++;
+    long nCr(int n, int r, int k) {
+        long res = 1; 
+        r = Math.min(r, n - r); // min of r * n - r
+
+        for(int i = 1; i <= r; i++) {
+            res = res * (n - i + 1) / i; 
+            if(res > k) return k + 1; 
         }
-
-        // 1) Compute perm = (half)! / (freq[0]! * ... * freq[25]!)
-        BigInteger perms = BigInteger.ONE;
-        int sum = 0;
-        for (int c = 0; c < 26; c++) {
-            int f = freq[c];
-            for (int j = 1; j <= f; j++) {
-                perms = perms.multiply(BigInteger.valueOf(sum + j)).divide(BigInteger.valueOf(j));
-            }
-            sum += f;
-        }
-
-        BigInteger rank = BigInteger.valueOf(k - 1);
-        StringBuilder halfStr = new StringBuilder(half);
-
-        for (int rem = half; rem > 0; rem--) {
-            for (int c = 0; c < 26; c++) {
-                if (freq[c] == 0) continue;
-                // blockSize = perms * freq[c] / rem
-                BigInteger blockSize = perms.multiply(BigInteger.valueOf(freq[c])).divide(BigInteger.valueOf(rem));
-
-                if (rank.compareTo(blockSize) < 0) {
-                    halfStr.append((char)('a' + c));
-                    perms = blockSize;
-                    freq[c]--;
-                    break;
-                } else {
-                    rank = rank.subtract(blockSize);
-                }
-            }
-        }
-
-        // assemble full palindrome
-        String left = halfStr.toString();
-        String right = new StringBuilder(left).reverse().toString();
-        return left.length() < n/2 ? "" : left + (n % 2 == 1 ? s.charAt(half) : "") + right;
+        return res; 
     }
-    
+    long ways(int n, int f[], int k) {
+        long total = 1; 
+        for( int i = 0; i < 26; i++) {
+            total *= nCr(n, f[i], k); 
+            if(total > k) return k + 1; // bigger exact doesn't mater 
+            n -= f[i]; 
+        }
+        return total; 
+    }
+    public String smallestPalindrome(String s, int k) {
+        int n = s.length(); 
+        int len = n/2; 
+        int f[] = new int[26]; 
+        for(int i = 0; i < n; i++) f[s.charAt(i) - 'a']++; 
 
+        // half it 
+        char str[] = new char[n]; 
+        for(int i = 0; i < 26; i++) {
+            if(f[i] % 2 == 1) str[n/2] = (char)('a' + i); 
+            f[i] /= 2; 
+        }
+
+        // only half matters 
+        long cnt = ways(len, f, k); 
+
+        if(cnt < k) return ""; // else possible 
+
+        /// first half 
+        for(int idx = 0; idx < len; idx++) {
+            for(int i = 0; i < 26; i++) {
+                if(f[i] == 0) continue; 
+                // pick cur 
+                f[i]--; // reduc freq 
+                long possible = ways(len - idx - 1, f, k); 
+                if(possible >= k) {
+                    // fix cur
+                    str[idx] = (char) ('a' + i); 
+                    break; 
+                } else {
+                    k -= possible; 
+                    f[i]++; // undo it. 
+                } 
+            }
+        }
+
+        // mirror 
+        for(int i = 0; i < len; i++) {
+            str[n - i - 1] = str[i]; 
+        }
+        return String.valueOf(str); 
+    }
 }
