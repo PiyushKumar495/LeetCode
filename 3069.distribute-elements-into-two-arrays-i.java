@@ -1,22 +1,29 @@
-import java.util.ArrayList;
-import java.util.List;
+class Solution {
+    public int[] resultArray(int[] nums) {
 
-public class Solution {
-    public List<Integer> resultArray(List<Integer> v) {
-        int n = v.size();
-        List<Integer> ans = new ArrayList<>();
-        List<Integer> v1 = new ArrayList<>();
-        List<Integer> v2 = new ArrayList<>();
-        v1.add(v.get(0));
-        v2.add(v.get(1));
-        for (int i = 2; i < n; i++) {
-            if (v1.get(v1.size() - 1) > v2.get(v2.size() - 1))
-                v1.add(v.get(i));
-            else
-                v2.add(v.get(i));
+        int len = nums.length;
+
+        int[] arr1 = new int[len];
+        int[] arr2 = new int[len];
+
+        int idx1 = 1;
+        int idx2 = 1;
+
+        arr1[0] = nums[0];
+        arr2[0] = nums[1];
+
+        for (int i = 2; i < len; i++) {
+
+            if (arr1[idx1 - 1] > arr2[idx2 - 1]) {
+                arr1[idx1++] = nums[i];
+            } else {
+                arr2[idx2++] = nums[i];
+            }
         }
-        ans.addAll(v1);
-        ans.addAll(v2);
-        return ans;
+
+        System.arraycopy(arr1, 0, nums, 0, idx1);
+        System.arraycopy(arr2, 0, nums, idx1, idx2);
+
+        return nums;
     }
 }
